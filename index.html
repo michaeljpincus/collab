@@ -11,8 +11,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { margin: 0; font-family: 'Roboto Serif'; }
-    #map { width: 100vw; height: 100vh; display: block; background: #fff; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;   /* removes both scrollbars */
+      font-family: 'Roboto Serif';
+    }
+    #map {
+      display: block;     /* removes the small inline-element gap under the SVG */
+      width: 100vw;
+      height: 100vh;
+      background: #fff;
+    }
 
     #title-card {
     position: absolute; top: 12px; left: 12px; background: white;
