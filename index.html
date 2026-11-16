@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Classmates Map</title>
+  <title>Journeys to Penn</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://unpkg.com/d3-geo-projection@4"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     html, body {
       margin: 0;
@@ -25,24 +24,28 @@
     }
 
     #title-card {
-    position: absolute; top: 12px; left: 12px; background: white;
-    background: rgba(255, 255, 255, 0.7); border-radius: 4px;
-    padding: 10px 14px; border-radius: 4px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      position: absolute; top: 12px; left: 12px;
+      background: rgba(255, 255, 255, 0.7); border-radius: 4px;
+      padding: 10px 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.3);
     }
     #title-card h1 { margin: 0 0 4px; font-size: 35px; }
     #title-card p { margin: 0; font-size: 15px; line-height: 1.4; color: #444; }
 
     /* Keep stroke widths constant in screen pixels, regardless of zoom */
-    .sphere, .country, .link, .hometown, .undergrad { vector-effect: non-scaling-stroke; }
+    .sphere, .country, .link, .hometown, .penn { vector-effect: non-scaling-stroke; }
 
     .sphere { fill: #aadcfb; stroke: #ffffff; stroke-width: 1px; }
     .country { fill: #ffffff; stroke: #aadcfb; stroke-width: 0.5px; }
-    .link { fill: none; stroke: #888; stroke-width: 1px; stroke-opacity: 0.6; }
-    .link.active { stroke: #d62728; stroke-width: 2.5px; stroke-opacity: 1; }
-    .hometown { fill: #1f77b4; stroke: white; stroke-width: 0px; fill-opacity: 0.5; }
-    .undergrad { fill: #e90909; stroke: white; stroke-width: 0px; fill-opacity: 0.5; }
-    .hometown:hover, .undergrad:hover { stroke: black; stroke-width: 1.5px; }
+
+    .link { fill: none; stroke: #011F5B; stroke-width: 1px; stroke-opacity: 0.35; transition: stroke-opacity 0.1s; }
+    .link.active { stroke: #990000; stroke-width: 2.5px; stroke-opacity: 1; }
+    .links-dimmed .link:not(.active) { stroke-opacity: 0.08; }
+
+    .hometown { fill: #1f77b4; stroke: white; stroke-width: 0px; fill-opacity: 0.6; }
+    .hometown:hover, .hometown.active { stroke: black; stroke-width: 0px; fill-opacity: 0.95; }
+
+    .penn { fill: #990000; stroke: #011F5B; stroke-width: 0px; fill-opacity: 0.95; }
+
     #tooltip {
       position: absolute; pointer-events: none; opacity: 0;
       background: rgba(0,0,0,0.85); color: white;
@@ -52,8 +55,7 @@
     #legend {
       position: absolute; bottom: 12px; left: 12px; max-width: 280px;
       background: rgba(255, 255, 255, 0.7); border-radius: 4px;
-        padding: 10px 14px; border-radius: 4px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      padding: 10px 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.3);
     }
     #legend span.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
   </style>
@@ -63,13 +65,12 @@
   <div id="tooltip"></div>
   <div id="legend">
     <div><span class="dot" style="background:#1f77b4"></span>Hometown</div>
-    <div><span class="dot" style="background:#e90909"></span>Undergrad</div>
+    <div><span class="dot" style="background:#990000"></span>Penn</div>
   </div>
   <div id="title-card">
-    <h1>MUSA Journeys</h1>
-    <p>A selection of MUSA student and faculty hometowns and undergrad institutions. </p>
-    </div>
-  
+    <h1>Journeys to Penn</h1>
+    <p>Every line connects a MUSA student or faculty member's hometown to the University of Pennsylvania. Hover a hometown to highlight its path.</p>
+  </div>
 
 <script>
 const width = window.innerWidth;
@@ -77,35 +78,27 @@ const height = window.innerHeight;
 
 const svg = d3.select("#map").attr("viewBox", [0, 0, width, height]);
 const tooltip = d3.select("#tooltip");
-
-// Everything that should pan/zoom goes inside this group
 const g = svg.append("g");
 
 Promise.all([
   d3.json("countries.geojson"),
-  d3.json("line_geometry.geojson"),
+  d3.json("lines.geojson"),
   d3.json("h_geometry.geojson"),
-  d3.json("ug_geometry.geojson")
-]).then(([countries, lines, hometowns, undergrads]) => {
+  d3.json("penn.geojson")
+]).then(([countries, lines, hometowns, penn]) => {
 
-  // Peirce quincuncial projection, fit to the whole sphere (a square)
- const sphere = { type: "Sphere" };
+  const sphere = { type: "Sphere" };
 
-// Everything you want in view: just the classmate points here
-const dataExtent = {
-  type: "FeatureCollection",
-  features: [...hometowns.features, ...undergrads.features]
-};
+  const dataExtent = {
+    type: "FeatureCollection",
+    features: [...hometowns.features, ...penn.features]
+  };
 
-const projection = d3.geoPeirceQuincuncial()
-  .fitExtent([[40, 40], [width - 40, height - 40]], dataExtent);
-const path = d3.geoPath(projection);
+  const projection = d3.geoPeirceQuincuncial()
+    .fitExtent([[40, 40], [width - 40, height - 40]], dataExtent);
+  const path = d3.geoPath(projection);
 
-  // Layers drawn in order: sphere -> countries -> lines -> points (points on top)
-  g.append("path")
-    .datum(sphere)
-    .attr("class", "sphere")
-    .attr("d", path);
+  g.append("path").datum(sphere).attr("class", "sphere").attr("d", path);
 
   g.append("g").selectAll("path")
     .data(countries.features)
@@ -113,65 +106,86 @@ const path = d3.geoPath(projection);
     .attr("class", "country")
     .attr("d", path);
 
-  const linePaths = g.append("g").selectAll("path")
+  const linesG = g.append("g");
+  const linePaths = linesG.selectAll("path")
     .data(lines.features)
     .join("path")
     .attr("class", "link")
     .attr("d", path);
 
+  // Match each hometown to its line: by name if present, otherwise by an endpoint coordinate
+  const coordKey = c => c.map(v => v.toFixed(4)).join(",");
+  const lineEnds = new Map();
+  lines.features.forEach((f, i) => {
+    const flat = f.geometry.type === "MultiLineString" ? f.geometry.coordinates.flat() : f.geometry.coordinates;
+    [flat[0], flat[flat.length - 1]].forEach(c => {
+      const k = coordKey(c);
+      if (!lineEnds.has(k)) lineEnds.set(k, []);
+      lineEnds.get(k).push(i);
+    });
+  });
+  function linesFor(d) {
+    const byCoord = lineEnds.get(coordKey(d.geometry.coordinates));
+    if (byCoord) return byCoord;
+    const n = d.properties && d.properties.name;
+    if (!n) return [];
+    return lines.features.map((f, i) => (f.properties && f.properties.name === n) ? i : -1).filter(i => i >= 0);
+  }
+
   function showTip(event, html) {
-  tooltip.html(html).style("opacity", 1);
-
-  const pad = 12;
-  const { width: tw, height: th } = tooltip.node().getBoundingClientRect();
-
-  // Default: below and to the right of the cursor
-  let x = event.pageX + pad;
-  let y = event.pageY + pad;
-
-  // Flip left if it would overflow the right edge
-  if (x + tw > window.scrollX + window.innerWidth) x = event.pageX - tw - pad;
-  // Flip above if it would overflow the bottom edge
-  if (y + th > window.scrollY + window.innerHeight) y = event.pageY - th - pad;
-
-  tooltip.style("left", x + "px").style("top", y + "px");
-}
+    tooltip.html(html).style("opacity", 1);
+    const pad = 12;
+    const { width: tw, height: th } = tooltip.node().getBoundingClientRect();
+    let x = event.pageX + pad;
+    let y = event.pageY + pad;
+    if (x + tw > window.scrollX + window.innerWidth) x = event.pageX - tw - pad;
+    if (y + th > window.scrollY + window.innerHeight) y = event.pageY - th - pad;
+    tooltip.style("left", x + "px").style("top", y + "px");
+  }
   const hideTip = () => tooltip.style("opacity", 0);
 
   const r = 7;
 
-  g.append("g").selectAll("circle") // adds hometowns to the map 
+  const hometownDots = g.append("g").selectAll("circle")
     .data(hometowns.features)
     .join("circle")
     .attr("class", "hometown")
     .attr("transform", d => `translate(${projection(d.geometry.coordinates)})`)
     .attr("r", r)
-    .on("mouseover", (e, d) => showTip(e,
-      `<strong>${d.properties.name}</strong><br>Hometown: ${d.properties.hometown}`))
+    .on("mouseover", function (e, d) {
+      const idx = new Set(linesFor(d));
+      linesG.classed("links-dimmed", true);
+      linePaths.classed("active", (_, i) => idx.has(i));
+      linePaths.filter((_, i) => idx.has(i)).raise();
+      showTip(e, `<strong>${d.properties.name}</strong><br>Hometown: ${d.properties.hometown}`);
+    })
     .on("mousemove", (e, d) => showTip(e,
       `<strong>${d.properties.name}</strong><br>Hometown: ${d.properties.hometown}`))
-    .on("mouseout", hideTip);
+    .on("mouseout", () => {
+      linesG.classed("links-dimmed", false);
+      linePaths.classed("active", false);
+      hideTip();
+    });
 
-  g.append("g").selectAll("circle") // adds undergrads to the map
-    .data(undergrads.features)
+  // Penn on top
+  const pennDots = g.append("g").selectAll("circle")
+    .data(penn.features)
     .join("circle")
-    .attr("class", "undergrad")
+    .attr("class", "penn")
     .attr("transform", d => `translate(${projection(d.geometry.coordinates)})`)
-    .attr("r", r)
-    .on("mouseover", (e, d) => showTip(e,
-      `<strong>${d.properties.name}</strong><br>Undergrad: ${d.properties.undergrad}`))
-    .on("mousemove", (e, d) => showTip(e,
-      `<strong>${d.properties.name}</strong><br>Undergrad: ${d.properties.undergrad}`))
+    .attr("r", r * 1.8)
+    .on("mouseover", (e, d) => showTip(e, `<strong>${(d.properties && (d.properties.name || d.properties.institution)) || "University of Pennsylvania"}</strong>`))
+    .on("mousemove", (e, d) => showTip(e, `<strong>${(d.properties && (d.properties.name || d.properties.institution)) || "University of Pennsylvania"}</strong>`))
     .on("mouseout", hideTip);
 
-  // Zoom & pan; keep point size constant on screen.
-  // Strokes are handled by vector-effect: non-scaling-stroke in the CSS.
+  // Zoom & pan; keep point size constant on screen
   const zoom = d3.zoom()
     .scaleExtent([1, 20])
     .on("zoom", (event) => {
       const k = event.transform.k;
       g.attr("transform", event.transform);
-      g.selectAll(".hometown, .undergrad").attr("r", r / k);
+      hometownDots.attr("r", r / k);
+      pennDots.attr("r", r * 1.8 / k);
     });
 
   svg.call(zoom);

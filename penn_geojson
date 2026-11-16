@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "penn_geojson",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "name": "Penn" }, "geometry": { "type": "Point", "coordinates": [ -75.192829589755007, 39.952267207286575 ] } }
+]
+}
