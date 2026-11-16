@@ -1,20 +1,20 @@
 name,hometown,hometown_lat,hometown_lon,undergrad,ug_lat,ug_lon
-Nathan L.,San Diego,32.70558275,-117.1513221,UC Santa Cruz,36.9904907,-122.0585333
-Yogi P.,Irvine,33.68581123,-117.8271107,Arizona State University ,33.42289895,-111.9279164
-Chloe A.,Pasadena,39.15056532,-76.5512706,Duke Kunshan University,31.41587723,120.9014382
+Nathan L.,"San Diego, CA", 32.70558275,-117.1513221,UC Santa Cruz,36.9904907,-122.0585333
+Yogi P.,"Irvine, CA",33.68581123,-117.8271107,Arizona State University ,33.42289895,-111.9279164
+Chloe A.,"Pasadena, MD",39.15056532,-76.5512706,Duke Kunshan University,31.41587723,120.9014382
 Isaac T.,Singapore,1.435507539597224,103.80100589917066,University of Oxford,51.75691666,-1.254474992
 Lauryn C.,Singapore,1.309031777,103.8050348,University College London,51.52451909,-0.1340293739
-Michael F.,Pittsburgh,40.43664273,-79.99155368,Haverford College,40.00736007,-75.30522646
-Elizabeth D.,Newburgh,41.50210972,-74.00523163,James Madison University,38.43503312,-78.86991574
-Sophia M.,Portland,45.51505936,-122.6746892,UC Berkeley,37.87119711,-122.2555166
-Alhaylam A.,Riyadh,24.72891406,46.81950361,Texas A&M University–Kingsville,27.52680639,-97.88465826
-Eugene B.,Ufa,54.73471493,55.9589588,University of Pennsylvania,39.95126273,-75.19110194
-Tatar A.,Bangkok,13.7765118,100.5150041,Colby College,44.56374674,-69.66263621
-Terry X.,Beijing,39.92448565,116.3478277,Syracuse University,43.03855605,-76.1340248
-Tegan L.,White Oak,40.33886074,-79.81246412,Penn State,40.79809142,-77.860241
-Carenna T.,Sacramento,38.58027035,-121.5015082,The George Washington University,38.8997061,-77.04880305
-Gautami K.,Nashik,20.00216853,73.79352935,School of Environment and Architecture,19.23190053,72.8457479
-Gil R. ,Issaquah,47.53186374,-122.0307821,Washington State University,46.72877497,-117.1467385
-Michael P.,East Meadow,40.7131051,-73.55794261,Vassar College,41.68672009,-73.89592285
-Cindy T.,Quincy,42.25081097,-71.00335884,Worcester Polytechnic Institute ,42.2741043,-71.80831444
-Max C.,Littleton,39.6127875,-105.0099924,"University of Colorado, Boulder",40.00718549,-105.2659978
+Michael F.,"Pittsburgh, PA",40.43664273,-79.99155368,Haverford College,40.00736007,-75.30522646
+Elizabeth D.,"Newburgh, NY",41.50210972,-74.00523163,James Madison University,38.43503312,-78.86991574
+Sophia M.,"Portland, OR",45.51505936,-122.6746892,UC Berkeley,37.87119711,-122.2555166
+Alhaylam A.,"Riyadh, Saudi Arabia", 24.72891406,46.81950361,Texas A&M University–Kingsville,27.52680639,-97.88465826
+Eugene B.,"Ufa, Russia", 54.73471493,55.9589588,University of Pennsylvania,39.95126273,-75.19110194
+Tatar A.,"Bangkok, Thailand",13.7765118,100.5150041,Colby College,44.56374674,-69.66263621
+Terry X.,"Beijing, China", 39.92448565,116.3478277,Syracuse University,43.03855605,-76.1340248
+Tegan L.,"White Oak, PA", 40.33886074,-79.81246412,Penn State,40.79809142,-77.860241
+Carenna T.,"Sacramento, CA", 38.58027035,-121.5015082,The George Washington University,38.8997061,-77.04880305
+Gautami K.,"Nashik, India", 20.00216853,73.79352935,School of Environment and Architecture,19.23190053,72.8457479
+Gil R. ,"Issaquah, WA", 47.53186374,-122.0307821,Washington State University,46.72877497,-117.1467385
+Michael P.,"East Meadow, NY",40.7131051,-73.55794261,Vassar College,41.68672009,-73.89592285
+Cindy T.,"Quincy, MA", 42.25081097,-71.00335884,Worcester Polytechnic Institute ,42.2741043,-71.80831444
+Max C.,"Littleton, CO", 39.6127875,-105.0099924,"University of Colorado, Boulder",40.00718549,-105.2659978
