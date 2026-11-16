@@ -20,8 +20,8 @@
     padding: 10px 14px; border-radius: 4px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.3);
     }
-    #title-card h1 { margin: 0 0 4px; font-size: 31px; }
-    #title-card p { margin: 0; font-size: 13px; line-height: 1.4; color: #444; }
+    #title-card h1 { margin: 0 0 4px; font-size: 35px; }
+    #title-card p { margin: 0; font-size: 15px; line-height: 1.4; color: #444; }
 
     /* Keep stroke widths constant in screen pixels, regardless of zoom */
     .sphere, .country, .link, .hometown, .undergrad { vector-effect: non-scaling-stroke; }
@@ -36,7 +36,7 @@
     #tooltip {
       position: absolute; pointer-events: none; opacity: 0;
       background: rgba(0,0,0,0.85); color: white;
-      padding: 6px 10px; border-radius: 4px; font-size: 13px; line-height: 1.4;
+      padding: 6px 10px; border-radius: 4px; font-size: 15px; line-height: 1.4;
       transition: opacity 0.1s;
     }
     #legend {
@@ -128,7 +128,7 @@ const path = d3.geoPath(projection);
 }
   const hideTip = () => tooltip.style("opacity", 0);
 
-  const r = 5;
+  const r = 7;
 
   g.append("g").selectAll("circle") // adds hometowns to the map 
     .data(hometowns.features)
